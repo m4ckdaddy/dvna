@@ -1,3 +1,8 @@
+function isValidRedirect(redirectUrl: string): boolean {
+  const validRedirectUrls = ['https:/validRedirectUrl1.com', 'https:/validRedirectUrl2.com', ];
+  return validRedirectUrls.indexOf(redirectUrl) > -1;
+}
+import { QueryTypes } from 'sequelize'
 var db = require('../models')
 var bCrypt = require('bcrypt')
 const exec = require('child_process').exec;
@@ -7,9 +12,11 @@ var serialize = require("node-serialize")
 const Op = db.Sequelize.Op
 
 module.exports.userSearch = function (req, res) {
-	var query = "SELECT name,id FROM Users WHERE login='" + req.body.login + "'";
+	var query = "SELECT name, id FROM Users WHERE login=:login";
 	db.sequelize.query(query, {
-		model: db.User
+	    model: db.User,
+	    replacements: { login: req.body.login },
+	    type: QueryTypes.SELECT
 	}).then(user => {
 		if (user.length) {
 			var output = {
@@ -185,7 +192,9 @@ module.exports.userEditSubmit = function (req, res) {
 
 module.exports.redirect = function (req, res) {
 	if (req.query.url) {
-		res.redirect(req.query.url)
+		if (isValidRedirect(req.query.url)) {
+		    res.redirect(req.query.url)
+		}
 	} else {
 		res.send('invalid redirect url')
 	}
