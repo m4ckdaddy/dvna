@@ -1,3 +1,7 @@
+function isValidRedirect(redirectUrl) {
+  const validRedirectUrls = ['https:/validRedirectUrl1.com', 'https:/validRedirectUrl2.com', ];
+  return validRedirectUrls.indexOf(redirectUrl) > -1;
+}
 import {execFileSync} from "child_process";
 function isValidRedirect(redirectUrl: string): boolean {
   const validRedirectUrls = ['https:/validRedirectUrl1.com', 'https:/validRedirectUrl2.com', ];
@@ -194,7 +198,8 @@ module.exports.userEditSubmit = function (req, res) {
 module.exports.redirect = function (req, res) {
 	if (req.query.url) {
 		if (isValidRedirect(req.query.url)) {
-		    res.redirect(req.query.url)
+		    if (isValidRedirect(req.query.url)) {res.redirect(req.query.url)
+		}
 		}
 	} else {
 		res.send('invalid redirect url')

@@ -29,6 +29,7 @@ app.use(session({
 
 // Initialize Passport
 app.use(passport.initialize())
+passport.session  = Object.assign(passport.session?? {}, {httpOnly: true, secure: true});
 app.use(passport.session())
 
 // Initialize express-flash
